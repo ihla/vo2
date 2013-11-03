@@ -20,88 +20,159 @@
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <TextView
-        android:id="@+id/txtLastKnownLoc"
+        android:id="@+id/textViewLocationUpdates"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/btnLastLoc"
-        android:layout_alignRight="@+id/btnLastLoc"
-        android:layout_below="@+id/btnLastLoc"
-        android:gravity="center"
-        android:text="0.0,0.0"
+        android:layout_alignLeft="@+id/textViewInterval"
+        android:layout_alignRight="@+id/etLocationInterval"
+        android:layout_marginTop="50dp"
+        android:text="Location Updates"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
-    <Button
-        android:id="@+id/btnLastLoc"
+    <TextView
+        android:id="@+id/textViewAccuracy"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/textViewInterval"
+        android:layout_below="@+id/etLocationInterval"
+        android:layout_marginTop="14dp"
+        android:text="Accuracy"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <TextView
+        android:id="@+id/textViewInterval"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/txtConnectionStatus"
-        android:layout_alignRight="@+id/txtConnectionStatus"
-        android:layout_below="@+id/txtConnectionStatus"
-        android:layout_marginTop="18dp"
-        android:onClick="buttonClicked"
-        android:text="Fetch Last Location" />
-
-    <Button
-        android:id="@+id/btnStartRequest"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/textView1"
-        android:layout_alignRight="@+id/txtLastKnownLoc"
-        android:layout_below="@+id/etLocationInterval"
-        android:onClick="buttonClicked"
-        android:text="Start" />
-
-    <TextView
-        android:id="@+id/txtLocationRequest"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/btnStartRequest"
-        android:layout_alignRight="@+id/btnStartRequest"
-        android:layout_below="@+id/btnStartRequest"
-        android:gravity="center"
-        android:text="0.0,0.0"
+        android:layout_below="@+id/textViewLocationUpdates"
+        android:layout_marginTop="14dp"
+        android:text="Interval"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <EditText
         android:id="@+id/etLocationInterval"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignRight="@+id/txtLastKnownLoc"
-        android:layout_alignTop="@+id/textView1"
+        android:layout_alignRight="@+id/txtConnectionStatus"
+        android:layout_below="@+id/textViewLocationUpdates"
+        android:layout_toRightOf="@+id/textViewAccuracy"
         android:ems="3"
         android:inputType="number"
-        android:text="100" >
+        android:text="5000" >
+
+        <requestFocus />
     </EditText>
 
-    <TextView
-        android:id="@+id/textView1"
+    <RadioGroup
+        android:id="@+id/radioGroupAccuracy"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/txtLastKnownLoc"
-        android:layout_below="@+id/txtLastKnownLoc"
-        android:layout_marginTop="51dp"
-        android:text="Location Request Listener"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+        android:layout_alignTop="@+id/textViewAccuracy"
+        android:layout_toRightOf="@+id/textViewAccuracy" >
 
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/txtLocationRequest"
-        android:layout_alignRight="@+id/txtLocationRequest"
-        android:layout_below="@+id/txtLocationRequest"
-        android:layout_marginTop="50dp"
-        android:text="Request Location PendingIntent"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+        <RadioButton
+            android:id="@+id/radioBalanced"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="true"
+            android:text="Balanced" />
+
+        <RadioButton
+            android:id="@+id/radioHigh"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="High" />
+
+        <RadioButton
+            android:id="@+id/radioLow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Low" />
+    </RadioGroup>
 
     <Button
         android:id="@+id/btnRequestLocationIntent"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/textView2"
-        android:layout_alignRight="@+id/textView2"
-        android:layout_below="@+id/textView2"
+        android:layout_alignLeft="@+id/textViewVO2"
+        android:layout_alignParentBottom="true"
+        android:layout_alignRight="@+id/etLocationInterval"
         android:onClick="buttonClicked"
         android:text="Start" />
+
+    <TextView
+        android:id="@+id/textViewVO2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/textViewAccuracy"
+        android:layout_below="@+id/radioGroupAccuracy"
+        android:layout_marginTop="15dp"
+        android:text="VO2"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <TextView
+        android:id="@+id/textViewAge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/textViewVO2"
+        android:layout_below="@+id/textViewVO2"
+        android:layout_marginTop="14dp"
+        android:text="Age"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <EditText
+        android:id="@+id/editTextAge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/textViewAge"
+        android:layout_alignBottom="@+id/textViewAge"
+        android:layout_toLeftOf="@+id/radioGroupSex"
+        android:layout_toRightOf="@+id/textViewAccuracy"
+        android:ems="10"
+        android:inputType="number"
+        android:text="30" />
+
+    <RadioGroup
+        android:id="@+id/radioGroupSex"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignRight="@+id/btnRequestLocationIntent"
+        android:layout_alignTop="@+id/textViewAge"
+        android:layout_toRightOf="@+id/radioGroupAccuracy" >
+
+        <RadioButton
+            android:id="@+id/radioMale"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="true"
+            android:text="Male" />
+
+        <RadioButton
+            android:id="@+id/radioFemale"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Female" />
+    </RadioGroup>
+
+    <TextView
+        android:id="@+id/textViewHeight"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/radioGroupSex"
+        android:layout_alignLeft="@+id/textViewAge"
+        android:text="Height"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <EditText
+        android:id="@+id/editTextHeight"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/textViewHeight"
+        android:layout_alignBottom="@+id/textViewHeight"
+        android:layout_alignLeft="@+id/editTextAge"
+        android:layout_alignRight="@+id/editTextAge"
+        android:ems="10"
+        android:inputType="number"
+        android:text="180" />
 
 </RelativeLayout>

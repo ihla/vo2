@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -26,11 +27,15 @@ public class MainActivity extends Activity implements GooglePlayServicesClient.C
 
 	private static final String SHARED_PREFERENCES = "co.joyatwork.vo2tracker.SHARED_PREFERENCES";
 	private static final String KEY_UPDATES_REQUESTED = "co.joyatwork.vo2tracker.KEY_UPDATES_REQUESTED";
+	private static final String KEY_INTERVAL = "co.joyatwork.vo2tracker.KEY_INTERVAL";
+	private static final String KEY_ACCURACY = "co.joyatwork.vo2tracker.KEY_UPDATES_ACCURACY";
+	private static final String KEY_AGE = "co.joyatwork.vo2tracker.KEY_AGE";
+	private static final String KEY_HEIGHT = "co.joyatwork.vo2tracker.KEY_HEIGHT";
+	private static final String KEY_MALE = "co.joyatwork.vo2tracker.KEY_MALE";
 
 	private String TAG = this.getClass().getSimpleName();
 	
 	private TextView txtConnectionStatus;
-	private TextView txtLastKnownLoc;
 	private EditText etLocationInterval;
 	private TextView txtLocationRequest;
 	
@@ -41,18 +46,31 @@ public class MainActivity extends Activity implements GooglePlayServicesClient.C
 	
     SharedPreferences prefs;
     SharedPreferences.Editor prefsEditor;
-
+    
 	private boolean updatesRequested;
+	private EditText ageEditText;
+	private EditText heightEditText;
+	private RadioButton radioButtonMale;
+	private RadioButton radioButtonBalanced;
+	private RadioButton radioButtonLow;
+	private RadioButton radioButtonFemale;
+	private RadioButton radioButtonHigh;
 
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+
 		txtConnectionStatus = (TextView) findViewById(R.id.txtConnectionStatus);
-		txtLastKnownLoc = (TextView) findViewById(R.id.txtLastKnownLoc);
 		etLocationInterval = (EditText) findViewById(R.id.etLocationInterval);
-		txtLocationRequest = (TextView) findViewById(R.id.txtLocationRequest);
+		ageEditText = (EditText)findViewById(R.id.editTextAge);
+		heightEditText = (EditText)findViewById(R.id.editTextHeight);
+		radioButtonMale = (RadioButton)findViewById(R.id.radioMale);
+		radioButtonFemale = (RadioButton)findViewById(R.id.radioFemale);
+		radioButtonBalanced = (RadioButton)findViewById(R.id.radioBalanced);
+		radioButtonHigh = (RadioButton)findViewById(R.id.radioHigh);
+		radioButtonLow = (RadioButton)findViewById(R.id.radioLow);
 		
 		intentService = new Intent(this,LocationService.class);
 		pendingIntent = PendingIntent.getService(this, 1, intentService, 0);
@@ -70,8 +88,9 @@ public class MainActivity extends Activity implements GooglePlayServicesClient.C
 		}
 		else{
 			Toast.makeText(this, "Google Play Service Error " + resp, Toast.LENGTH_LONG).show();
-			
 		}
+		
+		//Log.i(TAG, "onCreate()");
 		
 	}
 
@@ -87,73 +106,88 @@ public class MainActivity extends Activity implements GooglePlayServicesClient.C
         } else {
             prefsEditor.putBoolean(KEY_UPDATES_REQUESTED, false);
             prefsEditor.commit();
+            updatesRequested = false;
         }
+        
+        if (updatesRequested) {
+        	((Button)findViewById(R.id.btnRequestLocationIntent)).setText("Stop");
+        }
+        else {
+        	((Button)findViewById(R.id.btnRequestLocationIntent)).setText("Start");
+        }
+        
+        etLocationInterval.setText(String.valueOf(prefs.getLong(KEY_INTERVAL, 5000)));
+        radioButtonBalanced.setChecked(isAccuracySetting(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY));
+        radioButtonLow.setChecked(isAccuracySetting(LocationRequest.PRIORITY_LOW_POWER));
+        radioButtonHigh.setChecked(isAccuracySetting(LocationRequest.PRIORITY_HIGH_ACCURACY));
+        
+        
+        ageEditText.setText(String.valueOf(prefs.getInt(KEY_AGE, 30)));
+        heightEditText.setText(String.valueOf(prefs.getInt(KEY_HEIGHT, 180)));
+        radioButtonMale.setChecked(prefs.getBoolean(KEY_MALE, true));
+        radioButtonFemale.setChecked(!prefs.getBoolean(KEY_MALE, true));
+        
+		//Log.i(TAG, "onResume()");
+
+	}
+
+	private boolean isAccuracySetting(int accuracyValue) {
+		return accuracyValue == prefs.getInt(KEY_ACCURACY, LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
 	}
 
 	@Override
 	protected void onPause() {
         // Save the current setting for updates
         prefsEditor.putBoolean(KEY_UPDATES_REQUESTED, updatesRequested);
+        prefsEditor.putLong(KEY_INTERVAL, Long.parseLong(etLocationInterval.getText().toString()));
+        prefsEditor.putInt(KEY_ACCURACY, getLocationUpdateAccuracy());
+        prefsEditor.putInt(KEY_AGE, Integer.parseInt(ageEditText.getText().toString()));
+        prefsEditor.putInt(KEY_HEIGHT, Integer.parseInt(heightEditText.getText().toString()));
+        prefsEditor.putBoolean(KEY_MALE, radioButtonMale.isChecked());
         prefsEditor.commit();
         
 		super.onPause();
+		//Log.i(TAG, "onPause()");
 	}
 
 
-	@Override
-	protected void onStart() {
-		// TODO Auto-generated method stub
-		super.onStart();
-	}
-
-	@Override
-	protected void onStop() {
-		// TODO Auto-generated method stub
-		super.onStop();
-	}
-
-	
 	public void buttonClicked(View v){
-		if(v.getId() == R.id.btnLastLoc){
-			if(locationclient!=null && locationclient.isConnected()){
-				Location loc =locationclient.getLastLocation();
-				Log.i(TAG, "Last Known Location :" + loc.getLatitude() + "," + loc.getLongitude());
-				txtLastKnownLoc.setText(loc.getLatitude() + "," + loc.getLongitude());	
-			}
-		}
-		if(v.getId() == R.id.btnStartRequest){
-			if(locationclient!=null && locationclient.isConnected()){
-				
-				if(((Button)v).getText().equals("Start")){
-					locationrequest = LocationRequest.create();
-					locationrequest.setInterval(Long.parseLong(etLocationInterval.getText().toString()));
-					locationclient.requestLocationUpdates(locationrequest, this);
-					((Button) v).setText("Stop");	
-				}
-				else{
-					locationclient.removeLocationUpdates(this);
-					((Button) v).setText("Start");
-				}
-				
-			}
-		}
 		if(v.getId() == R.id.btnRequestLocationIntent){
 			if(((Button)v).getText().equals("Start")){
 				
 				locationrequest = LocationRequest.create();
-				locationrequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+				locationrequest.setPriority(getLocationUpdateAccuracy());
 				locationrequest.setInterval(Long.parseLong(etLocationInterval.getText().toString()));
-				locationclient.requestLocationUpdates(locationrequest, pendingIntent);
 				
+				LocationService.MotionMeterSingleton.deleteInstance();
+				LocationService.MotionMeterSingleton.set(Integer.parseInt(ageEditText.getText().toString()), 
+						Integer.parseInt(heightEditText.getText().toString()),
+						radioButtonMale.isChecked());
+				
+				locationclient.requestLocationUpdates(locationrequest, pendingIntent);
+				Log.i(TAG, "LocationRequest " + locationrequest.toString());
+
 				((Button) v).setText("Stop");
 				updatesRequested = true;
 			}
 			else{
 				locationclient.removeLocationUpdates(pendingIntent);
+				//Log.i(TAG, "stop intent " + pendingIntent.toString());
+
 				((Button) v).setText("Start");
 				updatesRequested = false;
 			}
 		}
+	}
+
+	private int getLocationUpdateAccuracy() {
+		if (radioButtonBalanced.isChecked()) {
+			return LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY;
+		}
+		else if (radioButtonLow.isChecked()) {
+			return LocationRequest.PRIORITY_LOW_POWER;
+		}
+		return LocationRequest.PRIORITY_HIGH_ACCURACY;
 	}
 	
 	
@@ -162,6 +196,7 @@ public class MainActivity extends Activity implements GooglePlayServicesClient.C
 		super.onDestroy();
 		if(locationclient!=null)
 			locationclient.disconnect();
+		//Log.i(TAG, "onDestroy()");
 	}
 
 	@Override

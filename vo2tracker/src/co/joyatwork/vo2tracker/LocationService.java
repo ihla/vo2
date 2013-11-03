@@ -16,28 +16,39 @@ import co.joyatwork.vo2tracker.R;
 public class LocationService extends IntentService {
 
 	private static final String SERVICE_NAME = "Location Service";
-	private static final boolean MALE = true;
-	private static final int HEIGHT_IN_CM = 192;
-	private static final int AGE = 47;
 	private String TAG = this.getClass().getSimpleName();
 	private static final String LOGGER_FILE_NAME = "vo2.csv";
 	private static final String LOGGER_FILE_HEADER = "lat,long,vo2";
 	private CsvLogger logger;
 	private final StringBuffer logString = new StringBuffer();
 	
-	private static class MotionMeterSingleton {
+	public static class MotionMeterSingleton {
 		private static MotionMeter instance = null;
+		
+		private static int age = 0;
+		private static int height = 0;
+		private static boolean isMale = false; 
+		
+		public static void set(int age, int height, boolean isMale) {
+			MotionMeterSingleton.age = age;
+			MotionMeterSingleton.height = height;
+			MotionMeterSingleton.isMale = isMale;
+		}
+		
 		public static MotionMeter getInstance() {
 			if (instance == null) {
-				//TODO config arguments
-				instance = new MotionMeter(AGE, HEIGHT_IN_CM, MALE);
-				Log.i("MotionMeterSingleton", "new instance");
+				instance = new MotionMeter(age, height, isMale);
+				Log.i("MotionMeterSingleton", "new instance " + age + "," + height + "," + isMale);
 			}
 			return instance;
 		}
+		
+		public static void deleteInstance() {
+			instance = null; //freed for gc
+		}
 	}
-	private MotionMeter motionMeter;
 	
+	private MotionMeter motionMeter;
 	public LocationService() {
 		super(SERVICE_NAME);
 	}
@@ -52,12 +63,15 @@ public class LocationService extends IntentService {
 		logger = new CsvLogger(this);
 		logger.createCsvFile(LOGGER_FILE_NAME, LOGGER_FILE_HEADER);
 		motionMeter = MotionMeterSingleton.getInstance();
+		
+		//Log.i(TAG, "onCreate()");
 	}
 
 
 	@Override
 	protected void onHandleIntent(Intent intent) {
-			
+		//Log.i(TAG, "onHandleIntent intent " + intent.toString());
+		
 		Location location = intent.getParcelableExtra(LocationClient.KEY_LOCATION_CHANGED);
 		if(location != null) {
 			long currentTimeMillis = System.currentTimeMillis();
@@ -70,7 +84,7 @@ public class LocationService extends IntentService {
  					.append(longitude)
 					.append(CsvLogger.CSV_DELIM)
 					.append(vo2);
-			Log.i(TAG, "onHandleIntent " + logString);
+			Log.i(TAG, "onHandleIntent log " + logString);
 			logger.log(logString);
 			
 			showNotification(location, vo2);
