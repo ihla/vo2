@@ -17,27 +17,7 @@
         android:layout_alignParentTop="true"
         android:gravity="center"
         android:text="Connection Status"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
-
-    <TextView
-        android:id="@+id/textViewLocationUpdates"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/textViewInterval"
-        android:layout_alignRight="@+id/etLocationInterval"
-        android:layout_marginTop="50dp"
-        android:text="Location Updates"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
-
-    <TextView
-        android:id="@+id/textViewAccuracy"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/textViewInterval"
-        android:layout_below="@+id/etLocationInterval"
-        android:layout_marginTop="14dp"
-        android:text="Accuracy"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+        android:textAppearance="?android:attr/textAppearanceSmall" />
 
     <TextView
         android:id="@+id/textViewInterval"
@@ -47,7 +27,7 @@
         android:layout_below="@+id/textViewLocationUpdates"
         android:layout_marginTop="14dp"
         android:text="Interval"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+        android:textAppearance="?android:attr/textAppearanceSmall" />
 
     <EditText
         android:id="@+id/etLocationInterval"
@@ -56,7 +36,7 @@
         android:layout_alignRight="@+id/txtConnectionStatus"
         android:layout_below="@+id/textViewLocationUpdates"
         android:layout_toRightOf="@+id/textViewAccuracy"
-        android:ems="3"
+        android:ems="1"
         android:inputType="number"
         android:text="5000" >
 
@@ -101,16 +81,6 @@
         android:text="Start" />
 
     <TextView
-        android:id="@+id/textViewVO2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/textViewAccuracy"
-        android:layout_below="@+id/radioGroupAccuracy"
-        android:layout_marginTop="15dp"
-        android:text="VO2"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
-
-    <TextView
         android:id="@+id/textViewAge"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -118,7 +88,7 @@
         android:layout_below="@+id/textViewVO2"
         android:layout_marginTop="14dp"
         android:text="Age"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+        android:textAppearance="?android:attr/textAppearanceSmall" />
 
     <EditText
         android:id="@+id/editTextAge"
@@ -161,7 +131,7 @@
         android:layout_alignBottom="@+id/radioGroupSex"
         android:layout_alignLeft="@+id/textViewAge"
         android:text="Height"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+        android:textAppearance="?android:attr/textAppearanceSmall" />
 
     <EditText
         android:id="@+id/editTextHeight"
@@ -174,5 +144,33 @@
         android:ems="10"
         android:inputType="number"
         android:text="180" />
+
+    <TextView
+        android:id="@+id/textViewLocationUpdates"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/txtConnectionStatus"
+        android:layout_below="@+id/txtConnectionStatus"
+        android:layout_marginTop="14dp"
+        android:text="Location Updates"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
+
+    <TextView
+        android:id="@+id/textViewVO2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/textViewAccuracy"
+        android:layout_below="@+id/radioGroupAccuracy"
+        android:text="VO2"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
+
+    <TextView
+        android:id="@+id/textViewAccuracy"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/textViewInterval"
+        android:layout_below="@+id/etLocationInterval"
+        android:text="Accuracy"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
 
 </RelativeLayout>
