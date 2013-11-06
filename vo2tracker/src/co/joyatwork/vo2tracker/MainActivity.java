@@ -80,11 +80,11 @@ public class MainActivity extends Activity implements GooglePlayServicesClient.C
         prefsEditor = prefs.edit();
 
         updatesRequested = false;
+		locationclient = new LocationClient(this,this,this);
 
 		int resp = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
 		if(resp == ConnectionResult.SUCCESS){
-			locationclient = new LocationClient(this,this,this);
-			locationclient.connect();
+			// connect client in onStart() acc to google recommendation
 		}
 		else{
 			Toast.makeText(this, "Google Play Service Error " + resp, Toast.LENGTH_LONG).show();
@@ -136,6 +136,12 @@ public class MainActivity extends Activity implements GooglePlayServicesClient.C
 	}
 
 	@Override
+	protected void onStart() {
+		super.onStart();
+		locationclient.connect();
+	}
+	
+	@Override
 	protected void onPause() {
         // Save the current setting for updates
         prefsEditor.putBoolean(KEY_UPDATES_REQUESTED, updatesRequested);
@@ -148,6 +154,12 @@ public class MainActivity extends Activity implements GooglePlayServicesClient.C
         
 		super.onPause();
 		//Log.i(TAG, "onPause()");
+	}
+
+	@Override
+	protected void onStop() {
+		locationclient.disconnect();
+		super.onStop();
 	}
 
 
@@ -194,8 +206,7 @@ public class MainActivity extends Activity implements GooglePlayServicesClient.C
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
-		if(locationclient!=null)
-			locationclient.disconnect();
+		// client disconnected onStop() acc to google recommendation
 		//Log.i(TAG, "onDestroy()");
 	}
 
